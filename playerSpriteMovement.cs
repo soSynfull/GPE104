@@ -5,22 +5,24 @@ using UnityEngine;
 
 public class spriteMovement : MonoBehaviour
 {
-    private Transform tf; // A variable to hold our transfrom component
     public float speed; // Allows variable to be seen from editor
     public float turnSpeed;
     public float turbo;
+    private Transform tf;
+
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-       
+       tf = GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-     
+     // "Vector3" represents the location of an object within a 3D space
+     // "Vector3.zero" is a predefined position (0f,0f,0f)
         Vector3 direction = Vector3.zero;
         
         if (Input.GetKey(KeyCode.W))
@@ -59,8 +61,16 @@ public class spriteMovement : MonoBehaviour
 
     if (Input.GetKey(KeyCode.LeftShift))
         {
+            //".deltaTime" allows code to reflect seconds instead of frames
             transform.position += direction.normalized * speed * turbo * Time.deltaTime;
         }
         
+    if (Input.GetKeyDown(KeyCode.T))
+        {
+            // "Random.Range" allows for a range of numbers to choose from for our new vector3 location
+            transform.position = new Vector3(Random.Range(-10f, 10f),
+            Random.Range(-5f, 5f), transform.position.z);
+            Debug.Log("Teleport");
+        }
     }
 }
