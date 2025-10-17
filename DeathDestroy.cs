@@ -1,7 +1,9 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class DeathDestroy : Death
-{  
+{
+  
     //Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -14,12 +16,14 @@ public class DeathDestroy : Death
     {
         
     }
-
+    
     public override void Die()
     {
         //Destroy the game object that this component is on
         Destroy(this.gameObject);
 
     }
+     
+    
 }
 
