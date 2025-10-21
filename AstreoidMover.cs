@@ -15,4 +15,10 @@ public class AstreoidMover : MonoBehaviour
     {
         transform.Translate(moveDirection.normalized * moveSpeed * Time.deltaTime);
     }
+
+    //Destroy meteor when it goes off camera
+    private void OnBecameInvisible()
+    {
+        Destroy(gameObject);
+    }
 }

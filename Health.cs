@@ -22,13 +22,25 @@ public class Health : MonoBehaviour
         
     }
 
-    public void TakeDamage (float damage)
+    public void TakeDamage(float damage)
     {
-        currentHealth -= damage; //current health = current health - damage
+        currentHealth -= damage;
+
         if (currentHealth <= 0)
         {
+
             Die();
         }
+    }
+
+    public void TakeDamage(float damage, Pawn damageDealer)
+    {
+        //TODO: Give points to the damage dealer for dealing gamage
+        //For now, debug who did the damage
+        Debug.Log(damageDealer.gameObject.name + "did" + damage + "damage to" + this.gameObject.name);
+
+        //Actually take the damage
+        TakeDamage(damage);
     }
 
     public void Heal (float healAmount)
@@ -42,8 +54,16 @@ public class Health : MonoBehaviour
 
     public void Die ()
     {
-        // TODO: Get the death component 
-        //TODO: Tell the death component to die
-        Debug.Log("You got me!");
+        //  Get the death component 
+        Death deathComponent = GetComponent<Death>();
+        //Tell the death component to die
+        if (deathComponent != null)
+        {
+            deathComponent.Die();
+        }
+       else
+        {
+            Debug.LogWarning("Warning: " + gameObject.name + "has no death component");
+        }
     }
 }

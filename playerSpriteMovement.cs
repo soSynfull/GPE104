@@ -1,3 +1,4 @@
+using JetBrains.Annotations;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -5,22 +6,30 @@ using UnityEngine;
 
 public class spriteMovement : MonoBehaviour
 {
+
     public float speed; // Allows variable to be seen from editor
     public float turnSpeed;
     public float turbo;
+    public Shooter shooterComponent;
     private Transform tf;
+    public GameObject pawnObject;
+    public Pawn pawnComponent;
+   
 
     
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+    // Allows game object to retrieve position, rotation, scale
        tf = GetComponent<Transform>();
+        shooterComponent = GetComponent<Shooter>();
     }
 
     // Update is called once per frame
     void Update()
     {
+
      // "Vector3" represents the location of an object within a 3D space
      // "Vector3.zero" is a predefined position (0f,0f,0f)
         Vector3 direction = Vector3.zero;
@@ -59,18 +68,42 @@ public class spriteMovement : MonoBehaviour
             Debug.Log(" Rotating Right");
         }
 
-    if (Input.GetKey(KeyCode.LeftShift))
+        if (Input.GetKey(KeyCode.LeftShift))
         {
             //".deltaTime" allows code to reflect seconds instead of frames
             transform.position += direction.normalized * speed * turbo * Time.deltaTime;
         }
         
-    if (Input.GetKeyDown(KeyCode.T))
+        if (Input.GetKeyDown(KeyCode.T))
         {
             // "Random.Range" allows for a range of numbers to choose from for our new vector3 location
             transform.position = new Vector3(Random.Range(-10f, 10f),
             Random.Range(-5f, 5f), transform.position.z);
             Debug.Log("Teleport");
+        }
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            if (shooterComponent == null)
+            {
+                Debug.Log("Shooter Component is missing");
+            }
+            else
+            {
+                shooterComponent.Shoot();
+                Debug.Log("Shot Triggered");
+            }
+        }
+
+
+
+    }
+
+    public void Shoot()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            shooterComponent.Shoot();
         }
     }
 }
