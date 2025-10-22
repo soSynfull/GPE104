@@ -73,7 +73,17 @@ public class DamageOnCollision : MonoBehaviour
         Pawn affectedPawn = collision.gameObject.GetComponent<Pawn>();
         if (affectedPawn != null && instantKill == true)
         {
-            Destroy(affectedPawn.gameObject);
+            // Retrieves death script to utiliez Die() function
+            Death deathComponent = affectedPawn.GetComponent<Death>();
+            if (deathComponent != null)
+            {
+                Debug.Log("DamageonCollision: Calling Die() on " + affectedPawn.name);
+                deathComponent.Die();
+            }
+            else
+            {
+                Debug.LogWarning("DamageOnCollision: No Death Component found on " + affectedPawn.name);
+            }
         }
     }
 
