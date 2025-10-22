@@ -26,6 +26,13 @@ public class DeathGameOver : Death
             GameManager.instance.ShowGameOverScreen();
             Destroy(gameObject);
         }
+        //update lives display when a life is lost
+        if (GameManager.instance.lifeIcons.Count > 0)
+        {
+            int lastIndex = GameManager.instance.lifeIcons.Count - 1;
+            Destroy(GameManager.instance.lifeIcons[lastIndex]);
+            GameManager.instance.lifeIcons.RemoveAt(lastIndex);
+        }
 
        
       

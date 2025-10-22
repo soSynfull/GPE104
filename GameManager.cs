@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     
     public bool isRespawning = false;
+    
     public static GameManager instance;
   
    
@@ -21,6 +22,10 @@ public class GameManager : MonoBehaviour
 
     [Header("UI")]
     public TextMeshProUGUI scoreText;
+    public GameObject lifeIcon;
+    public Transform livesPanel;
+    //Allows us to grab the initial loction of the gameobject within our canvas 
+    public List<GameObject> lifeIcons = new List<GameObject>();
 
     [Header("Prefabs")]
     // List of prefabs
@@ -202,8 +207,25 @@ public class GameManager : MonoBehaviour
 
         //InvokeRepeating allows the function to be called mulitple times at a specified rate ("MethodName, start delay, repeatRate)
         InvokeRepeating("SpawnMeteor", .5f, 3f);
-    }
 
+        //Initializing lives display
+        // Clear old icons
+        foreach (GameObject icon in lifeIcons)
+        {
+            Destroy(icon);
+           
+        }
+        lifeIcons.Clear();
+
+        // Create icons for current lives
+        for (int i = 0; i < currentLives; i++)
+        {
+            GameObject icon = Instantiate(lifeIcon, livesPanel);
+            lifeIcons.Add(icon);
+
+        }
+    }
+    // Declares a coroutine method that can pause exectution and resume later
     public IEnumerator RespawnAfterDeath()
     {
         GameManager.instance.isRespawning = true;

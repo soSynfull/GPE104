@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class spriteMovement : MonoBehaviour
 {
-
+    public float score;
     public float speed; // Allows variable to be seen from editor
     public float turnSpeed;
     public float turbo;
