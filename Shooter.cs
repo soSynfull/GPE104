@@ -5,9 +5,13 @@ public class Shooter : MonoBehaviour
 {
     public Bullet bulletToShoot;
     public Transform firePoint;
+    private AudioSource audioSource;
 
-   
 
+    private void Start()
+    {
+        audioSource = GetComponent<AudioSource>();
+    }
 
     public void Shoot()
     {
@@ -28,10 +32,11 @@ public class Shooter : MonoBehaviour
 
     public void Shoot(Bullet bulletToShoot)
     {
+
         //Instantiate the bullet we plan to shoot
         Bullet theBullet = Instantiate<Bullet>(bulletToShoot, firePoint.position, firePoint.rotation );
 
-        // TODO: In the future, we might want to set the bullets damage and speed based on player data
+        audioSource.Play();
     }
     
 }

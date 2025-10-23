@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour
 {
     
     public bool isRespawning = false;
+   
     
     public static GameManager instance;
   
@@ -19,6 +20,7 @@ public class GameManager : MonoBehaviour
     [Header("Players")]
     // List of players
     public List<spriteMovement> players;
+    public List<Meteor> meteors;
 
     [Header("UI")]
     public TextMeshProUGUI scoreText;
@@ -40,7 +42,11 @@ public class GameManager : MonoBehaviour
     public float topScore;
     public int startLives = 3;
     public int currentLives;
+    public float spawnInterval = 1.0f;
+    public float maxMeteorCount = 15;
+    private int currentMeteorCount = 0;
     public List<Transform> meteorSpawnPoints;
+
 
     [Header("Game States")]
     public GameObject mainMenuObject;
@@ -70,10 +76,27 @@ public class GameManager : MonoBehaviour
 
     public void SpawnMeteor()
     {
+        if (currentMeteorCount >= maxMeteorCount)
+        {
+            CancelInvoke("SpawnMeteor");
+            return;
+        }
+
         GameObject newMeteor = Instantiate(meteorPrefab,
                                             GetRandomSpawnPoint(), 
                                             Quaternion.identity) as GameObject;
+        currentMeteorCount++;
+
+        
+
         newMeteor.transform.Rotate(0.0f, 0.0f, Random.Range(0.0f, 360.0f));
+
+        // Get the Meteor component
+        Meteor meteorComponent = newMeteor.GetComponent<Meteor>();
+
+        // Add it to our list
+        meteors.Add(meteorComponent);
+
     }
 
     public void Start()
@@ -109,11 +132,8 @@ public class GameManager : MonoBehaviour
             ShowGameOverScreen();
         }
         
-        // Updates the score during gameplay
-        if (scoreText != null)
-        {
-            scoreText.text = "Score: " + Mathf.FloorToInt(score);
-        }
+      
+       
     }
        
         
@@ -163,6 +183,44 @@ public class GameManager : MonoBehaviour
 
     }
 
+    //Update score during gameplay
+    public void AddScore (float amount)
+    {
+        score += amount;
+        Debug.Log("AddScore called. New score: " + amount + " | Total: " + score);
+
+        if (scoreText != null)
+       {
+            scoreText.text = "Score: " + Mathf.FloorToInt(score);
+       }
+        if ( score == 7500)
+        {
+            RespawnMeteorWave();
+        }
+    }
+
+    public void RespawnMeteorWave()
+    {
+        currentMeteorCount = 0;
+        maxMeteorCount = 20;
+
+        if (currentMeteorCount <= maxMeteorCount)
+        {
+            InvokeRepeating("SpawnMeteor", .2f, spawnInterval / 2);
+        }
+        else
+        {
+
+            CancelInvoke("SpawnMeteor");
+            return;
+        }
+
+        GameObject newMeteor = Instantiate(meteorPrefab,
+                                                GetRandomSpawnPoint(),
+                                                Quaternion.identity) as GameObject;
+        currentMeteorCount++;
+    }
+
     public void ShowMainMenu()
     {
         // Turn off gameplay screen
@@ -181,6 +239,13 @@ public class GameManager : MonoBehaviour
         mainMenuObject.SetActive(false);
         //Turn on Game Over Screen
         gameOverObject.SetActive(true);
+
+        if (gameOverObject == true)
+        {
+            score = 0;
+        }
+
+        CancelInvoke("SpawnMeteor");
     }
 
 
@@ -202,12 +267,19 @@ public class GameManager : MonoBehaviour
         //Spawn the Player Pawn
         SpawnPlayer();
 
+        //Make our meteors list
+        meteors = new List<Meteor>();
+
+
         // Set players lives to starting lives
         currentLives = startLives;
 
-        //InvokeRepeating allows the function to be called mulitple times at a specified rate ("MethodName, start delay, repeatRate)
-        InvokeRepeating("SpawnMeteor", .5f, 3f);
 
+        /*InvokeRepeating allows the function to be called mulitple times at a specified rate
+         *("MethodName, start delay, repeatRate)*/
+       InvokeRepeating("SpawnMeteor", .5f, spawnInterval);
+        
+       
         //Initializing lives display
         // Clear old icons
         foreach (GameObject icon in lifeIcons)
@@ -224,6 +296,9 @@ public class GameManager : MonoBehaviour
             lifeIcons.Add(icon);
 
         }
+
+
+       
     }
     // Declares a coroutine method that can pause exectution and resume later
     public IEnumerator RespawnAfterDeath()

@@ -5,14 +5,21 @@ using UnityEngine;
 public class DeathGameOver : Death
 {
 
-    
-  public override void Die()
+
+
+    private void Start()
+    {
+
+    }
+
+    public override void Die()
     {
         if (GameManager.instance.currentLives > 1)
         {
             //Subtract a life
             GameManager.instance.currentLives--;
             Debug.Log("DeathGameOver: Lives remaining = " + GameManager.instance.currentLives);
+
 
             Destroy(gameObject);
             // Destroy the player and respawn them
@@ -30,6 +37,7 @@ public class DeathGameOver : Death
         if (GameManager.instance.lifeIcons.Count > 0)
         {
             int lastIndex = GameManager.instance.lifeIcons.Count - 1;
+
             Destroy(GameManager.instance.lifeIcons[lastIndex]);
             GameManager.instance.lifeIcons.RemoveAt(lastIndex);
         }

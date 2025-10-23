@@ -59,12 +59,12 @@ public class spriteMovement : MonoBehaviour
 
         if (Input.GetKey(KeyCode.Q))
         {
-            transform.Rotate(0, 0, turnSpeed); // Allows for "turnSpeed" counter-clockwise
+            transform.Rotate(0, 0, turnSpeed *Time.deltaTime); // Allows for "turnSpeed" counter-clockwise
             Debug.Log(" Rotating Left");
         }
         if (Input.GetKey(KeyCode.E))
         {
-            transform.Rotate(0, 0, -turnSpeed); // Allows for "turnSpeed" clockwise
+            transform.Rotate(0, 0, -turnSpeed * Time.deltaTime); // Allows for "turnSpeed" clockwise
             Debug.Log(" Rotating Right");
         }
 
